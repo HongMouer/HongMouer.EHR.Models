@@ -10,9 +10,4 @@
     <PackageReleaseNotes>http://www.HongMouer.com</PackageReleaseNotes>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Hospital\" />
-    <Folder Include="Patient\" />
-  </ItemGroup>
-
 </Project>
