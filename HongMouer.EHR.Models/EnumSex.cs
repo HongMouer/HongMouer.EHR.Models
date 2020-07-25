@@ -9,6 +9,7 @@ namespace HongMouer.EHR.Models
     /// <summary>
     /// 性别标准 GB/T 2261.1-2003 人的性别代码
     /// </summary>
+    [Serializable]
     public enum EnumSex
     {
 

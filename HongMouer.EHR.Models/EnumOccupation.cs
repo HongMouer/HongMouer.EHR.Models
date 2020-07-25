@@ -8,6 +8,7 @@ namespace HongMouer.EHR.Models
     /// <summary>
     ///  从业状况  GB/T 2261.4-2003 从业状况(个人身份)代码
     /// </summary>
+    [Serializable]
     public enum EnumOccupation
     {
         /// <summary>

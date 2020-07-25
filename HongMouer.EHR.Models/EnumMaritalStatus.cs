@@ -9,6 +9,7 @@ namespace HongMouer.EHR.Models
     /// <summary>
     /// 婚姻状况 GB/T 2261.2-2003 婚姻状态代码
     /// </summary>
+    [Serializable]
     public enum EnumMaritalStatus
     {
 

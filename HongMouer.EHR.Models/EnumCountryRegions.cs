@@ -8,6 +8,7 @@ namespace HongMouer.EHR.Models
     /// <summary>
     /// 世界各国和地区名称代码 参照 GB/T 2659-2000 世界各国和地区名称代码
     /// </summary>
+    [Serializable]
     public enum EnumCountryRegions
     {
 
