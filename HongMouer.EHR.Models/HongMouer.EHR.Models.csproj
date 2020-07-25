@@ -1,7 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Revision>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Revision>
+    <AssemblyVersion>$(Revision)</AssemblyVersion>
+    <Version>$(Revision)</Version>
+    <FileVersion>$(Revision)</FileVersion>
+    <Copyright>http://www.HongMouer.com</Copyright>
+    <PackageReleaseNotes>http://www.HongMouer.com</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Hospital\" />
+    <Folder Include="Patient\" />
+  </ItemGroup>
 
 </Project>
