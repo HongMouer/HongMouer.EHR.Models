@@ -8,6 +8,10 @@
     <FileVersion>$(Revision)</FileVersion>
     <Copyright>http://www.HongMouer.com</Copyright>
     <PackageReleaseNotes>http://www.HongMouer.com</PackageReleaseNotes>
+    <RepositoryType></RepositoryType>
+    <RepositoryUrl>https://github.com/HongMouer/HongMouer.EHR.Models</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/HongMouer/HongMouer.EHR.Models</PackageProjectUrl>
+    <Description>数据标准</Description>
   </PropertyGroup>
 
 </Project>
