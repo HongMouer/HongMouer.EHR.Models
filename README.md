@@ -3,4 +3,12 @@
 
 
 
-NuGet:Install-Package HongMouer.EHR.Models -Version 2020.7.26.2316
+NuGet:Install-Package HongMouer.EHR.Models -Version 2020.7.27.10
+
+
+##更新说明
+      1、学位代码 GB/T 6864
+      2、职称/职务代码   GB/T 8561
+      3、所学专业代码  GB/T 16835
+      4、患者与本人关系代码  GB/T 4761
+      5、单位隶属关系代码  GB/T 12404
