@@ -12,6 +12,7 @@
     <RepositoryUrl>https://github.com/HongMouer/HongMouer.EHR.Models</RepositoryUrl>
     <PackageProjectUrl>https://github.com/HongMouer/HongMouer.EHR.Models</PackageProjectUrl>
     <Description>数据标准</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
