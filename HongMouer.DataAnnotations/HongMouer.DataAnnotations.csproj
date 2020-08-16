@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Revision>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Revision>
+    <AssemblyVersion>$(Revision)</AssemblyVersion>
+    <Version>$(Revision)</Version>
+    <FileVersion>$(Revision)</FileVersion>
+    <Description>http://www.HongMouer.com</Description>
+  </PropertyGroup>
+
+</Project>
