@@ -15,8 +15,4 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\HongMouer.DataAnnotations\HongMouer.DataAnnotations.csproj" />
-  </ItemGroup>
-
 </Project>
