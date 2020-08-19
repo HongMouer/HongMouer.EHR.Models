@@ -1,0 +1,24 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "HongMouer.DataAnnotations/2020.08.19.2009": {
+        "runtime": {
+          "HongMouer.DataAnnotations.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HongMouer.DataAnnotations/2020.08.19.2009": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
