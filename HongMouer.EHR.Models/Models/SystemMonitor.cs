@@ -66,19 +66,6 @@ namespace HongMouer.EHR.Models
 
         [Column("TIMES")]
         public long Times { get; set; }
-
-        /// <summary>
-        /// 状态码
-        /// </summary>
-
-        [Column("STATUS_CODE")]
-        public int StatusCode { get; set; }
-
-        /// <summary>
-        /// 添加时间
-        /// </summary>
-
-        [Column("CREATE_TIME")]
-        public DateTime CreateTime { get; set; }
+        
     }
 }
