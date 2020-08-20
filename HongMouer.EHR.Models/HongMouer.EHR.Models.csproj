@@ -15,6 +15,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>C:\HongMouer\HongMouer.EHR.Models\Package\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\HongMouer.DataAnnotations\HongMouer.DataAnnotations.csproj" />
   </ItemGroup>

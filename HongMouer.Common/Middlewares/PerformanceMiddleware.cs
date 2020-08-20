@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using HongMouer.EHR.Models.Models;
+using HongMouer.EntityRelationalCore.Repositories;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace HongMouer.Common
 {
-    public class PerformanceMiddleware
+    public static class PerformanceMiddleware
     {
-        private static IRepository _Context = new OracleRepository("DefaultConnection");
+        private static IRepository _Context = new OracleRepository("HongMouerConnection");
 
         public static IApplicationBuilder UsePerformanceLog(this IApplicationBuilder applicationBuilder)
 
@@ -22,7 +24,7 @@ namespace HongMouer.Common
                 await next();
                 profiler.Stop();
 
-                SaveMonitor(new ServiceMonitor
+                SaveMonitor(new SystemMonitor
                 {
                     ConnectionId = context.Connection.Id,
                     HostName = Dns.GetHostName(),
@@ -42,7 +44,7 @@ namespace HongMouer.Common
 
         }
 
-        private static void SaveMonitor(ServiceMonitor monitor)
+        private static void SaveMonitor(SystemMonitor monitor)
         {
             //try
             //{
