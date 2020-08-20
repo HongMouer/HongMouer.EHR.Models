@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>/home/liyang/RiderProjects/HongMouer.EHR.Models/HongMouer.EHR.Models/Package/</OutputPath>
+    <OutputPath>/home/liyang/RiderProjects/HongMouer.EHR.Models/Package/</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
