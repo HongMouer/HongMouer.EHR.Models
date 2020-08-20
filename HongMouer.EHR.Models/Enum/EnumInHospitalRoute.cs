@@ -8,7 +8,7 @@ namespace HongMouer.EHR.Models
     /// 参照 CV09.00.403 入院途径代码
     /// </summary>
     [Serializable]
-    public enum InHospitalRoute
+    public enum EnumInHospitalRoute
     {
         /// <summary>
         /// 门诊

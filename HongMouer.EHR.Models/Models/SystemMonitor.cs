@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HongMouer.EHR.Models.Models
+namespace HongMouer.EHR.Models
 {
 
     /// <summary>
     /// 系统监控表
     /// </summary>
     [Table("SYS_MONITOR")]
-    public class SystemMonitor
+    public class SystemMonitor:BaseModels
     {
         /// <summary>
         /// 链接ID

@@ -12,6 +12,11 @@ namespace HongMouer.EHR.Models
         string Name { get; }
 
         /// <summary>
+        /// 系统模块
+        /// </summary>
+        string Module { get; }
+
+        /// <summary>
         /// 分组名称
         /// </summary>
         string GroupName { get; }
