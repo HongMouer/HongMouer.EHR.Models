@@ -12,11 +12,10 @@ namespace HongMouer.Common
 {
     public static class PerformanceMiddleware
     {
-        private static IRepository _Context;
 
-        public static IApplicationBuilder UsePerformanceLog(this IApplicationBuilder app)
-
+        public static IApplicationBuilder UseSystemMonitor(this IApplicationBuilder app, IRepository repository)
         {
+            
             app.Use(async (context, next) =>
             {
                 var profiler = new StopwatchAnalyze();
@@ -24,7 +23,7 @@ namespace HongMouer.Common
                 await next();
                 profiler.Stop();
 
-                SaveMonitor(new SystemMonitor
+               await repository.InsertAsync(new SystemMonitor
                 {
                     ConnectionId = context.Connection.Id,
                     HostName = Dns.GetHostName(),
@@ -40,15 +39,6 @@ namespace HongMouer.Common
             });
 
             return app;
-        }
-
-        private static void SaveMonitor(SystemMonitor monitor)
-        {
-            //try
-            //{
-            _Context.InsertAsync(monitor);
-            //}
-            //catch (Exception ex) { }
         }
     }
 }
