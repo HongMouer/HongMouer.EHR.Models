@@ -1,4 +1,4 @@
-﻿using HongMouer.EHR.Models.Models;
+﻿using HongMouer.EHR.Models;
 using HongMouer.EntityRelationalCore.Repositories;
 using Microsoft.AspNetCore.Builder;
 using System;
@@ -6,19 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using HongMouer.Common.Utility;
 
 namespace HongMouer.Common
 {
     public static class PerformanceMiddleware
     {
-        private static IRepository _Context = new OracleRepository("HongMouerConnection");
+        private static IRepository _Context;
 
-        public static IApplicationBuilder UsePerformanceLog(this IApplicationBuilder applicationBuilder)
+        public static IApplicationBuilder UsePerformanceLog(this IApplicationBuilder app)
 
         {
-            applicationBuilder.Use(async (context, next) =>
+            app.Use(async (context, next) =>
             {
-
                 var profiler = new StopwatchAnalyze();
                 profiler.Start();
                 await next();
@@ -34,14 +34,12 @@ namespace HongMouer.Common
                     Method = context.Request.Method,
                     Path = context.Request.Path,
                     Times = profiler.ElapsedMilliseconds,
-                    StatusCode = context.Response.StatusCode,
+                    Status = context.Response.StatusCode,
                     CreateTime = DateTime.Now
                 });
-
             });
 
-            return applicationBuilder;
-
+            return app;
         }
 
         private static void SaveMonitor(SystemMonitor monitor)
