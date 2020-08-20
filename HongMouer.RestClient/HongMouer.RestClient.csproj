@@ -16,6 +16,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>/home/liyang/RiderProjects/HongMouer.EHR.Models/Package/</OutputPath>
+    <OutputPath>C:\HongMouer\HongMouer.EHR.Models\Package\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
 </Project>
