@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HongMouer.Common", "HongMou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HongMouer.DataAnnotations", "HongMouer.DataAnnotations\HongMouer.DataAnnotations.csproj", "{1CDA3B94-322D-4682-8AFD-AC7F4903836B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HongMouer.RestClient", "HongMouer.RestClient\HongMouer.RestClient.csproj", "{153DCA14-6AE6-4E4D-8ED2-44059D2EE1DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HongMouer.RestClient", "HongMouer.RestClient\HongMouer.RestClient.csproj", "{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{1CDA3B94-322D-4682-8AFD-AC7F4903836B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CDA3B94-322D-4682-8AFD-AC7F4903836B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CDA3B94-322D-4682-8AFD-AC7F4903836B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{153DCA14-6AE6-4E4D-8ED2-44059D2EE1DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{153DCA14-6AE6-4E4D-8ED2-44059D2EE1DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{153DCA14-6AE6-4E4D-8ED2-44059D2EE1DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{153DCA14-6AE6-4E4D-8ED2-44059D2EE1DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

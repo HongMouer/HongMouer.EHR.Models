@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Revision>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</Revision>
+    <AssemblyVersion>$(Revision)</AssemblyVersion>
+    <Version>$(Revision)</Version>
+    <FileVersion>$(Revision)</FileVersion>
+    <Copyright>http://www.HongMouer.com</Copyright>
+    <PackageReleaseNotes>http://www.HongMouer.com</PackageReleaseNotes>
+    <RepositoryType></RepositoryType>
+    <RepositoryUrl>https://github.com/HongMouer/HongMouer.EHR.Models</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/HongMouer/HongMouer.EHR.Models</PackageProjectUrl>
+    <Description>数据标准</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>/home/liyang/RiderProjects/HongMouer.EHR.Models/Package/</OutputPath>
+  </PropertyGroup>
+</Project>
