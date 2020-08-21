@@ -9,8 +9,8 @@ namespace HongMouer.EHR.Models
     /// <summary>
     /// 系统插件表
     /// </summary>
-    [Table("SYS_PLUGIN_MANAGE")]
-    public class SystemPluginManage: BaseModels
+    [Table("SYS_PLUGIN")]
+    public class SystemPlugin: BaseModels
     {
 
         /// <summary>

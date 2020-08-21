@@ -28,7 +28,7 @@ namespace HongMouer.Common
 
             var _Context = services.BuildServiceProvider().GetService<IRepository>();
 
-            var _Plugin = _Context.FindList<SystemPluginManage>().ToList();
+            var _Plugin = _Context.FindList<SystemPlugin>().ToList();
 
             var _ClassTypes = _Types.Where(x => x.IsClass).ToArray();
             var _InterfaceTypes = _Types.Where(x => x.IsInterface).ToArray();
@@ -50,7 +50,7 @@ namespace HongMouer.Common
 
                     if (!_Plugin.Exists(s => s.Name == denpendency.Name))
                     {
-                        _Context.Insert(new SystemPluginManage
+                        _Context.Insert(new SystemPlugin
                         {
                             Id = SnowflakeHelper.NextId(),
                             GroupName = denpendency.GroupName,
