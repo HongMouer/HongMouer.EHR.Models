@@ -15,7 +15,7 @@ namespace HongMouer.Common
 
         public static IApplicationBuilder UseSystemMonitor(this IApplicationBuilder app, IRepository repository)
         {
-            
+
             app.Use(async (context, next) =>
             {
                 var profiler = new StopwatchAnalyze();
@@ -23,7 +23,7 @@ namespace HongMouer.Common
                 await next();
                 profiler.Stop();
 
-               await repository.InsertAsync(new SystemMonitor
+                await repository.InsertAsync(new SystemMonitor
                 {
                     ConnectionId = context.Connection.Id,
                     HostName = Dns.GetHostName(),
@@ -34,7 +34,8 @@ namespace HongMouer.Common
                     Path = context.Request.Path,
                     Times = profiler.ElapsedMilliseconds,
                     Status = context.Response.StatusCode,
-                    CreateTime = DateTime.Now
+                    CreateTime = DateTime.Now,
+                    ModifyTime = DateTime.Now
                 });
             });
 

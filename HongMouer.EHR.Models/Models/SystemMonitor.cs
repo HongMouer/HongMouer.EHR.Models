@@ -49,7 +49,6 @@ namespace HongMouer.EHR.Models
         /// <summary>
         /// 请求方法
         /// </summary>
-
         [Column("METHOD")]
         public string Method { get; set; }
 
