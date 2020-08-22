@@ -7,15 +7,15 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "HongMouer.EHR.Models/2020.08.21.2306": {
+      "HongMouer.EHR.Models/2020.08.22.2143": {
         "dependencies": {
-          "HongMouer.DataAnnotations": "2020.8.21.2300"
+          "HongMouer.DataAnnotations": "2020.8.22.2134"
         },
         "runtime": {
           "HongMouer.EHR.Models.dll": {}
         }
       },
-      "HongMouer.DataAnnotations/2020.8.21.2300": {
+      "HongMouer.DataAnnotations/2020.8.22.2134": {
         "runtime": {
           "HongMouer.DataAnnotations.dll": {}
         }
@@ -23,12 +23,12 @@
     }
   },
   "libraries": {
-    "HongMouer.EHR.Models/2020.08.21.2306": {
+    "HongMouer.EHR.Models/2020.08.22.2143": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "HongMouer.DataAnnotations/2020.8.21.2300": {
+    "HongMouer.DataAnnotations/2020.8.22.2134": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
