@@ -7,12 +7,13 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "HongMouer.Common/2020.08.22.2348": {
+      "HongMouer.Common/2020.08.22.2355": {
         "dependencies": {
           "HongMouer.EHR.Models": "2020.8.22.2319",
           "HongMouer.EntityRelationalCore": "2020.8.21.2241",
           "Microsoft.AspNetCore.DataProtection": "3.1.7",
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "3.1.7",
           "Newtonsoft.Json": "12.0.3",
           "System.Text.Json": "4.7.2"
         },
@@ -245,6 +246,27 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.7": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "3.1.7.0",
+            "fileVersion": "3.100.720.37108"
+          }
+        }
+      },
+      "Microsoft.Extensions.Diagnostics.HealthChecks/3.1.7": {
+        "dependencies": {
+          "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "3.1.7",
+          "Microsoft.Extensions.Hosting.Abstractions": "3.1.7",
+          "Microsoft.Extensions.Options": "3.1.7"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll": {
+            "assemblyVersion": "3.1.7.0",
+            "fileVersion": "3.100.720.37108"
+          }
+        }
+      },
+      "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/3.1.7": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll": {
             "assemblyVersion": "3.1.7.0",
             "fileVersion": "3.100.720.37108"
           }
@@ -1574,7 +1596,7 @@
     }
   },
   "libraries": {
-    "HongMouer.Common/2020.08.22.2348": {
+    "HongMouer.Common/2020.08.22.2355": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1718,6 +1740,20 @@
       "sha512": "sha512-oKL2yNtTN1/cOp+cbdyv5TeLzO+GkO9B3fvbcPzKWTNCkDoH3ccYS3FWC1p4KSYe9frW4WsyfSTeM8X+xftOig==",
       "path": "microsoft.extensions.dependencyinjection.abstractions/3.1.7",
       "hashPath": "microsoft.extensions.dependencyinjection.abstractions.3.1.7.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Diagnostics.HealthChecks/3.1.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oCFhF8Vukm865sn4UWx8vb8RUDCJYBgm3TZ56WUdD4XQYKpu4/iuGrzIad7mtaFsl92yQhSp4O6irj3+lx6TcQ==",
+      "path": "microsoft.extensions.diagnostics.healthchecks/3.1.7",
+      "hashPath": "microsoft.extensions.diagnostics.healthchecks.3.1.7.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/3.1.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gxXPmHs/JjSuSZZYpsah9nflwpPLqtlQl2wIurIw75JwLQBpTHq/Wl+KIMMFpgc0tEg4xMGObGDLXwUtbklrMQ==",
+      "path": "microsoft.extensions.diagnostics.healthchecks.abstractions/3.1.7",
+      "hashPath": "microsoft.extensions.diagnostics.healthchecks.abstractions.3.1.7.nupkg.sha512"
     },
     "Microsoft.Extensions.FileProviders.Abstractions/3.1.7": {
       "type": "package",

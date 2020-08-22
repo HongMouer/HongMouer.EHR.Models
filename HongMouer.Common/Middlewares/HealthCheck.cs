@@ -11,7 +11,7 @@ namespace HongMouer.Common
 {
     public class HealthCheck : IHealthCheck
     {
-        private readonly IRepository _Repository;
+        private IRepository _Repository;
 
         public HealthCheck(IRepository repository)
         {
