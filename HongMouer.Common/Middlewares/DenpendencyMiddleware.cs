@@ -22,14 +22,10 @@ namespace HongMouer.Common
         public static IServiceCollection AddDenpendencyServices(this IServiceCollection services)
         {
             var _Assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList().FindAll(s => s.FullName.StartsWith("HongMouer."));
-
             var _Types = _Assemblies.SelectMany(a => a.DefinedTypes).Select(type => type.AsType())
                 .Where(x => x != typeof(IDenpendency) && typeof(IDenpendency).IsAssignableFrom(x)).ToArray();
-
             var _Context = services.BuildServiceProvider().GetService<IRepository>();
-
             var _Plugin = _Context.FindList<SystemPlugin>().ToList();
-
             var _ClassTypes = _Types.Where(x => x.IsClass).ToArray();
             var _InterfaceTypes = _Types.Where(x => x.IsInterface).ToArray();
             foreach (var item in _ClassTypes)
@@ -39,16 +35,16 @@ namespace HongMouer.Common
                 {
                     IDenpendency denpendency = (IDenpendency)Assembly.GetExecutingAssembly().CreateInstance(item.FullName, true, BindingFlags.Default, null, new object[] { null }, null, null);
 
-                    if (!_Plugin.Exists(s => s.Status == EnumStatus.正常.GetHashCode()))
+                    if (_Plugin == null && !_Plugin.Exists(s => s.Status == EnumStatus.正常.GetHashCode()))
                     {
                         services.AddScoped(_Interface, item);
                     }
-                    else if (_Plugin.Exists(s => s.Name == denpendency.Name && s.Status == EnumStatus.正常.GetHashCode()))
+                    else if (_Plugin != null && _Plugin.Exists(s => s.Name == denpendency.Name && s.Status == EnumStatus.正常.GetHashCode()))
                     {
                         services.AddScoped(_Interface, item);
                     }
 
-                    if (!_Plugin.Exists(s => s.Name == denpendency.Name))
+                    if (_Plugin != null || !_Plugin.Exists(s => s.Name == denpendency.Name))
                     {
                         _Context.Insert(new SystemPlugin
                         {
@@ -60,9 +56,9 @@ namespace HongMouer.Common
                             InterfaceFullName = _Interface.FullName,
                             Status = EnumStatus.停用.GetHashCode(),
                             Remark = denpendency.Remark,
-                            CreateTime=DateTime.Now,
-                            ModifyTime=DateTime.Now,
-                            
+                            CreateTime = DateTime.Now,
+                            ModifyTime = DateTime.Now,
+
                         });
                     }
                 }

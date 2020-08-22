@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HongMouer.Common": {
+      "commandName": "Executable",
+      "executablePath": "C:\\HongMouer\\HongMouer.CloudPlatform\\HongMouer.CloudPlatform\\bin\\Debug\\netcoreapp3.1\\HongMouer.CloudPlatform.exe"
+    }
+  }
+}

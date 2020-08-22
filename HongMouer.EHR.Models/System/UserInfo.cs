@@ -17,7 +17,7 @@ namespace HongMouer.EHR.Models
         /// 用户id
         /// </summary>
         [Key("USER_ID"), Column("USER_ID")]
-        public string UserId { get; set; }
+        public long UserId { get; set; }
 
         /// <summary>
         /// 用户工号
