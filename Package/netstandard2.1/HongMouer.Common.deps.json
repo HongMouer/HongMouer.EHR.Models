@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "HongMouer.Common/2020.08.22.2355": {
+      "HongMouer.Common/2020.08.22.2356": {
         "dependencies": {
           "HongMouer.EHR.Models": "2020.8.22.2319",
           "HongMouer.EntityRelationalCore": "2020.8.21.2241",
@@ -1596,7 +1596,7 @@
     }
   },
   "libraries": {
-    "HongMouer.Common/2020.08.22.2355": {
+    "HongMouer.Common/2020.08.22.2356": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
