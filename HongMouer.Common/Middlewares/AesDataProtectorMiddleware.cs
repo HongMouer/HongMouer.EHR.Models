@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HongMouer.Common
 {
-    internal class AesDataProtectorMiddleware : IDataProtector
+    public class AesDataProtectorMiddleware : IDataProtector
     {
 
         public IDataProtector CreateProtector(string purpose)
