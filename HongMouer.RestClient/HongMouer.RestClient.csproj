@@ -8,11 +8,13 @@
     <FileVersion>$(Revision)</FileVersion>
     <Copyright>http://www.HongMouer.com</Copyright>
     <PackageReleaseNotes>http://www.HongMouer.com</PackageReleaseNotes>
-    <RepositoryType></RepositoryType>
+    <RepositoryType>http://www.HongMouer.com</RepositoryType>
     <RepositoryUrl>https://github.com/HongMouer/HongMouer.EHR.Models</RepositoryUrl>
     <PackageProjectUrl>https://github.com/HongMouer/HongMouer.EHR.Models</PackageProjectUrl>
-    <Description>数据标准</Description>
+    <Description>Rest客户端</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>http://www.HongMouer.com</PackageLicenseExpression>
+    <PackageTags>HongMouer</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
