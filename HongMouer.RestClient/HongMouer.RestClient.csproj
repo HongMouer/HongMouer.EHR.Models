@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/HongMouer/HongMouer.EHR.Models</PackageProjectUrl>
     <Description>Rest客户端</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseExpression>http://www.HongMouer.com</PackageLicenseExpression>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageTags>HongMouer</PackageTags>
   </PropertyGroup>
 
