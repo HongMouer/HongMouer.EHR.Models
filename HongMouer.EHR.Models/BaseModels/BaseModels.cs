@@ -43,7 +43,7 @@ namespace HongMouer.EHR.Models
         /// 数据版本号
         /// </summary>
         [Column("ROWVERSION")]
-        public long RowVersion { get; set; }
+        public long RowVersion { get; set; } = DateTime.Now.Ticks;
 
         /// <summary>
         /// 创建人Id

@@ -22,7 +22,7 @@ namespace HongMouer.Common
         {
             try
             {
-                _Repository.FindEntity<UserInfo>();
+                _Repository.FindEntity<UserInfo>(s=>s.UserId==1);
             }
             catch (Exception ex)
             {

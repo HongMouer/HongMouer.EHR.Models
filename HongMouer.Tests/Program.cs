@@ -16,6 +16,7 @@ namespace HongMouer.Tests
 
             string a = Convert.ToBase64String(AesHelper.AESEncrypt(inputByteArray, Key, IV));
 
+            Console.WriteLine(SnowflakeHelper.NextId());
 
             Console.WriteLine(a);
 

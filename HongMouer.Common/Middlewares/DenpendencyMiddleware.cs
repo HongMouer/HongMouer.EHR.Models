@@ -28,23 +28,30 @@ namespace HongMouer.Common
             var _Plugin = _Context.FindList<SystemPlugin>().ToList();
             var _ClassTypes = _Types.Where(x => x.IsClass).ToArray();
             var _InterfaceTypes = _Types.Where(x => x.IsInterface).ToArray();
+
             foreach (var item in _ClassTypes)
             {
                 var _Interface = _InterfaceTypes.FirstOrDefault(x => x.IsAssignableFrom(item));
                 if (_Interface != null)
                 {
-                    IDenpendency denpendency = (IDenpendency)Assembly.GetExecutingAssembly().CreateInstance(item.FullName, true, BindingFlags.Default, null, new object[] { null }, null, null);
+                    object[] objParam = new object[item.GetConstructors().Length];
 
-                    if (_Plugin == null && !_Plugin.Exists(s => s.Status == EnumStatus.正常.GetHashCode()))
+                    for (int i = 0; i < item.GetConstructors().Length; i++)
+                    {
+                        objParam[i] = null;
+                    }
+
+                    IDenpendency denpendency = (IDenpendency)Activator.CreateInstance(item, objParam);
+
+                    if (!_Plugin.Exists(s => s.Status == EnumStatus.正常.GetHashCode()))
                     {
                         services.AddScoped(_Interface, item);
                     }
-                    else if (_Plugin != null && _Plugin.Exists(s => s.Name == denpendency.Name && s.Status == EnumStatus.正常.GetHashCode()))
+                    else if (_Plugin.Exists(s => s.Name == denpendency.Name && s.Status == EnumStatus.正常.GetHashCode()))
                     {
                         services.AddScoped(_Interface, item);
                     }
-
-                    if (_Plugin != null || !_Plugin.Exists(s => s.Name == denpendency.Name))
+                    if (_Plugin == null || _Plugin.Count == 0 || !_Plugin.Exists(s => s.Name == denpendency.Name))
                     {
                         _Context.Insert(new SystemPlugin
                         {
@@ -58,9 +65,10 @@ namespace HongMouer.Common
                             Remark = denpendency.Remark,
                             CreateTime = DateTime.Now,
                             ModifyTime = DateTime.Now,
-
+                            RowVersion = DateTime.Now.Ticks
                         });
                     }
+
                 }
             }
 
