@@ -20,22 +20,22 @@ namespace HongMouer.EHR.Models
         public long UserId { get; set; }
 
         /// <summary>
-        /// 用户工号
+        /// 用户账号,用于登录
         /// </summary>
-        [Column("User_Num")]
-        public string UserNum { get; set; }
-
-        /// <summary>
-        /// /用户名,用于登录
-        /// </summary>
-        [Column("User_Name")]
-        public string UserName { get; set; }
+        [Column("Account")]
+        public string Account { get; set; }
 
         /// <summary>
         /// 密码
         /// </summary>
-        [Column("User_Password")]
-        public string UserPassword { get; set; }
+        [Column("Password")]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        [Column("Name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// 昵称
