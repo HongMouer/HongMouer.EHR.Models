@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HongMouer.DataAnnotations",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HongMouer.RestClient", "HongMouer.RestClient\HongMouer.RestClient.csproj", "{82B6E4B9-00EF-4712-B5F8-607EB314FAF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HongMouer.Tests", "HongMouer.Tests\HongMouer.Tests.csproj", "{5B2434D3-CACB-4257-A078-236855F34622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HongMouer.Tests", "HongMouer.Tests\HongMouer.Tests.csproj", "{5B2434D3-CACB-4257-A078-236855F34622}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

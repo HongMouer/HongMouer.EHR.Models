@@ -176,5 +176,8 @@ namespace HongMouer.EHR.Models
         /// </summary>
         [Column("Medicine_Drug_RIGHT")]
         public string MedicineDrugRight { get; set; }
+
+        [Column("Redirect_URL")]
+        public string RedirectURL { get; set; }
     }
 }

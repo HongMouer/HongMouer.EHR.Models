@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "HongMouer.RestClient/2020.08.24.0053": {
+      "HongMouer.RestClient/2020.09.12.2037": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
@@ -26,7 +26,7 @@
     }
   },
   "libraries": {
-    "HongMouer.RestClient/2020.08.24.0053": {
+    "HongMouer.RestClient/2020.09.12.2037": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
