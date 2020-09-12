@@ -26,7 +26,7 @@ namespace HongMouer.EHR.Models
         public string UserNum { get; set; }
 
         /// <summary>
-        /// /用户名
+        /// /用户名,用于登录
         /// </summary>
         [Column("User_Name")]
         public string UserName { get; set; }
@@ -49,7 +49,6 @@ namespace HongMouer.EHR.Models
         [Column("Head_Portrait_Url")]
         public string HeadPortraitUrl { get; set; }
 
-
         /// <summary>
         /// 有效期开始时间
         /// </summary>
@@ -61,7 +60,6 @@ namespace HongMouer.EHR.Models
         /// </summary>
         [Column("Validity_End_Time")]
         public DateTime? ValidityEndTime { get; set; }
-
 
         /// <summary>
         /// 当前所属科室，每次切换系统更新该字段
@@ -110,6 +108,18 @@ namespace HongMouer.EHR.Models
         /// </summary>
         [Column("Tel")]
         public string Tel { get; set; }
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        [Column("Email")]
+        public string Email { get; set; }
+
+        /// <summary>
+        /// 电话号码
+        /// </summary>
+        [Column("TelPhone")]
+        public string TelPhone { get; set; }
 
         /// <summary>
         /// 所属院区
@@ -179,5 +189,20 @@ namespace HongMouer.EHR.Models
 
         [Column("Redirect_URL")]
         public string RedirectURL { get; set; }
+
+        [Column("Token")]
+        public string Token { get; set; }
+
+        [Column("Key")]
+        public string Key { get; set; }
+
+        [Column("IV")]
+        public string IV { get; set; }
+
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        [Column("Expire")]
+        public string Expire { get; set; }
     }
 }
