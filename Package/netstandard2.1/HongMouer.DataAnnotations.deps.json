@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "HongMouer.DataAnnotations/2020.09.12.2129": {
+      "HongMouer.DataAnnotations/2020.09.13.1104": {
         "runtime": {
           "HongMouer.DataAnnotations.dll": {}
         }
@@ -15,7 +15,7 @@
     }
   },
   "libraries": {
-    "HongMouer.DataAnnotations/2020.09.12.2129": {
+    "HongMouer.DataAnnotations/2020.09.13.1104": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

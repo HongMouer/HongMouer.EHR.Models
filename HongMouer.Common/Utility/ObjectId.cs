@@ -1,106 +1,545 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace HongMouer.Common.Utility
 {
-    public class ObjectId
+    /// <summary>
+    /// Id生成器，代码出自：https://github.com/tangxuehua/ecommon/blob/master/src/ECommon/Utilities/ObjectId.cs
+    /// </summary>
+    public struct ObjectId : IComparable<ObjectId>, IEquatable<ObjectId>
     {
-        private readonly static ObjectIdFactory factory = new ObjectIdFactory();
+        // private static fields
+        private static readonly DateTime __unixEpoch;
 
-        public ObjectId(byte[] hexData)
+        private static readonly long __dateTimeMaxValueMillisecondsSinceEpoch;
+        private static readonly long __dateTimeMinValueMillisecondsSinceEpoch;
+        private static ObjectId __emptyInstance = default(ObjectId);
+        private static int __staticMachine;
+        private static short __staticPid;
+        private static int __staticIncrement; // high byte will be masked out when generating new ObjectId
+
+        private static uint[] _lookup32 = Enumerable.Range(0, 256).Select(i =>
         {
-            this.Hex = hexData;
-            ReverseHex();
+            string s = i.ToString("x2");
+            return ((uint)s[0]) + ((uint)s[1] << 16);
+        }).ToArray();
+
+        // we're using 14 bytes instead of 12 to hold the ObjectId in memory but unlike a byte[] there is no additional object on the heap
+        // the extra two bytes are not visible to anyone outside of this class and they buy us considerable simplification
+        // an additional advantage of this representation is that it will serialize to JSON without any 64 bit overflow problems
+        private int _timestamp;
+
+        private int _machine;
+        private short _pid;
+        private int _increment;
+
+        // static constructor
+        static ObjectId()
+        {
+            __unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            __dateTimeMaxValueMillisecondsSinceEpoch = (DateTime.MaxValue - __unixEpoch).Ticks / 10000;
+            __dateTimeMinValueMillisecondsSinceEpoch = (DateTime.MinValue - __unixEpoch).Ticks / 10000;
+            __staticMachine = GetMachineHash();
+            __staticIncrement = (new System.Random()).Next();
+            __staticPid = (short)GetCurrentProcessId();
         }
 
-        public override string ToString()
+        // constructors
+        /// <summary>
+        /// Initializes a new instance of the ObjectId class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        public ObjectId(byte[] bytes)
         {
-            if (Hex == null)
-                Hex = new byte[12];
-            StringBuilder hexText = new StringBuilder();
-            for (int i = 0; i < this.Hex.Length; i++)
+            if (bytes == null)
             {
-                hexText.Append(this.Hex[i].ToString("x2"));
+                throw new ArgumentNullException("bytes");
             }
-            return hexText.ToString();
+            Unpack(bytes, out _timestamp, out _machine, out _pid, out _increment);
         }
 
-        public override int GetHashCode() => ToString().GetHashCode();
+        /// <summary>
+        /// Initializes a new instance of the ObjectId class.
+        /// </summary>
+        /// <param name="timestamp">The timestamp (expressed as a DateTime).</param>
+        /// <param name="machine">The machine hash.</param>
+        /// <param name="pid">The PID.</param>
+        /// <param name="increment">The increment.</param>
+        public ObjectId(DateTime timestamp, int machine, short pid, int increment)
+            : this(GetTimestampFromDateTime(timestamp), machine, pid, increment)
+        {
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the ObjectId class.
+        /// </summary>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="machine">The machine hash.</param>
+        /// <param name="pid">The PID.</param>
+        /// <param name="increment">The increment.</param>
+        public ObjectId(int timestamp, int machine, short pid, int increment)
+        {
+            if ((machine & 0xff000000) != 0)
+            {
+                throw new ArgumentOutOfRangeException("machine", "The machine value must be between 0 and 16777215 (it must fit in 3 bytes).");
+            }
+            if ((increment & 0xff000000) != 0)
+            {
+                throw new ArgumentOutOfRangeException("increment", "The increment value must be between 0 and 16777215 (it must fit in 3 bytes).");
+            }
+
+            _timestamp = timestamp;
+            _machine = machine;
+            _pid = pid;
+            _increment = increment;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ObjectId class.
+        /// </summary>
+        /// <param name="value">The value.</param>
         public ObjectId(string value)
         {
-            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
-            if (value.Length != 24) throw new ArgumentOutOfRangeException("value should be 24 characters");
-            Hex = new byte[12];
-            for (int i = 0; i < value.Length; i += 2)
+            if (value == null)
             {
-                try
-                {
-                    Hex[i / 2] = Convert.ToByte(value.Substring(i, 2), 16);
-                }
-                catch
-                {
-                    Hex[i / 2] = 0;
-                }
+                throw new ArgumentNullException("value");
             }
-            ReverseHex();
+            Unpack(ParseHexString(value), out _timestamp, out _machine, out _pid, out _increment);
         }
 
-        private void ReverseHex()
+        // public static properties
+        /// <summary>
+        /// Gets an instance of ObjectId where the value is empty.
+        /// </summary>
+        public static ObjectId Empty
         {
-            int copyIdx = 0;
-            byte[] time = new byte[4];
-            Array.Copy(Hex, copyIdx, time, 0, 4);
-            Array.Reverse(time);
-            this.Timestamp = BitConverter.ToInt32(time, 0);
-            copyIdx += 4;
-            byte[] mid = new byte[4];
-            Array.Copy(Hex, copyIdx, mid, 0, 3);
-            this.Machine = BitConverter.ToInt32(mid, 0);
-            copyIdx += 3;
-            byte[] pids = new byte[4];
-            Array.Copy(Hex, copyIdx, pids, 0, 2);
-            Array.Reverse(pids);
-            this.ProcessId = BitConverter.ToInt32(pids, 0);
-            copyIdx += 2;
-            byte[] inc = new byte[4];
-            Array.Copy(Hex, copyIdx, inc, 0, 3);
-            Array.Reverse(inc);
-            this.Increment = BitConverter.ToInt32(inc, 0);
+            get { return __emptyInstance; }
         }
 
-        public static ObjectId NewId() => factory.NewId();
+        // public properties
+        /// <summary>
+        /// Gets the timestamp.
+        /// </summary>
+        public int Timestamp
+        {
+            get { return _timestamp; }
+        }
 
+        /// <summary>
+        /// Gets the machine.
+        /// </summary>
+        public int Machine
+        {
+            get { return _machine; }
+        }
+
+        /// <summary>
+        /// Gets the PID.
+        /// </summary>
+        public short Pid
+        {
+            get { return _pid; }
+        }
+
+        /// <summary>
+        /// Gets the increment.
+        /// </summary>
+        public int Increment
+        {
+            get { return _increment; }
+        }
+
+        /// <summary>
+        /// Gets the creation time (derived from the timestamp).
+        /// </summary>
+        public DateTime CreationTime
+        {
+            get { return __unixEpoch.AddSeconds(_timestamp); }
+        }
+
+        // public operators
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId</param>
+        /// <returns>True if the first ObjectId is less than the second ObjectId.</returns>
+        public static bool operator <(ObjectId lhs, ObjectId rhs)
+        {
+            return lhs.CompareTo(rhs) < 0;
+        }
+
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId</param>
+        /// <returns>True if the first ObjectId is less than or equal to the second ObjectId.</returns>
+        public static bool operator <=(ObjectId lhs, ObjectId rhs)
+        {
+            return lhs.CompareTo(rhs) <= 0;
+        }
+
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId.</param>
+        /// <returns>True if the two ObjectIds are equal.</returns>
+        public static bool operator ==(ObjectId lhs, ObjectId rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId.</param>
+        /// <returns>True if the two ObjectIds are not equal.</returns>
+        public static bool operator !=(ObjectId lhs, ObjectId rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId</param>
+        /// <returns>True if the first ObjectId is greather than or equal to the second ObjectId.</returns>
+        public static bool operator >=(ObjectId lhs, ObjectId rhs)
+        {
+            return lhs.CompareTo(rhs) >= 0;
+        }
+
+        /// <summary>
+        /// Compares two ObjectIds.
+        /// </summary>
+        /// <param name="lhs">The first ObjectId.</param>
+        /// <param name="rhs">The other ObjectId</param>
+        /// <returns>True if the first ObjectId is greather than the second ObjectId.</returns>
+        public static bool operator >(ObjectId lhs, ObjectId rhs)
+        {
+            return lhs.CompareTo(rhs) > 0;
+        }
+
+        // public static methods
+        /// <summary>
+        /// Generates a new ObjectId with a unique value.
+        /// </summary>
+        /// <returns>An ObjectId.</returns>
+        public static ObjectId GenerateNewId()
+        {
+            return GenerateNewId(GetTimestampFromDateTime(DateTime.UtcNow));
+        }
+
+        /// <summary>
+        /// Generates a new ObjectId with a unique value (with the timestamp component based on a given DateTime).
+        /// </summary>
+        /// <param name="timestamp">The timestamp component (expressed as a DateTime).</param>
+        /// <returns>An ObjectId.</returns>
+        public static ObjectId GenerateNewId(DateTime timestamp)
+        {
+            return GenerateNewId(GetTimestampFromDateTime(timestamp));
+        }
+
+        /// <summary>
+        /// Generates a new ObjectId with a unique value (with the given timestamp).
+        /// </summary>
+        /// <param name="timestamp">The timestamp component.</param>
+        /// <returns>An ObjectId.</returns>
+        public static ObjectId GenerateNewId(int timestamp)
+        {
+            int increment = Interlocked.Increment(ref __staticIncrement) & 0x00ffffff; // only use low order 3 bytes
+            return new ObjectId(timestamp, __staticMachine, __staticPid, increment);
+        }
+
+        /// <summary>
+        /// Generates a new ObjectId string with a unique value.
+        /// </summary>
+        /// <returns>The string value of the new generated ObjectId.</returns>
+        public static string NewId()
+        {
+            return GenerateNewId().ToString();
+        }
+
+        /// <summary>
+        /// Packs the components of an ObjectId into a byte array.
+        /// </summary>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="machine">The machine hash.</param>
+        /// <param name="pid">The PID.</param>
+        /// <param name="increment">The increment.</param>
+        /// <returns>A byte array.</returns>
+        public static byte[] Pack(int timestamp, int machine, short pid, int increment)
+        {
+            if ((machine & 0xff000000) != 0)
+            {
+                throw new ArgumentOutOfRangeException("machine", "The machine value must be between 0 and 16777215 (it must fit in 3 bytes).");
+            }
+            if ((increment & 0xff000000) != 0)
+            {
+                throw new ArgumentOutOfRangeException("increment", "The increment value must be between 0 and 16777215 (it must fit in 3 bytes).");
+            }
+
+            byte[] bytes = new byte[12];
+            bytes[0] = (byte)(timestamp >> 24);
+            bytes[1] = (byte)(timestamp >> 16);
+            bytes[2] = (byte)(timestamp >> 8);
+            bytes[3] = (byte)(timestamp);
+            bytes[4] = (byte)(machine >> 16);
+            bytes[5] = (byte)(machine >> 8);
+            bytes[6] = (byte)(machine);
+            bytes[7] = (byte)(pid >> 8);
+            bytes[8] = (byte)(pid);
+            bytes[9] = (byte)(increment >> 16);
+            bytes[10] = (byte)(increment >> 8);
+            bytes[11] = (byte)(increment);
+            return bytes;
+        }
+
+        /// <summary>
+        /// Parses a string and creates a new ObjectId.
+        /// </summary>
+        /// <param name="s">The string value.</param>
+        /// <returns>A ObjectId.</returns>
+        public static ObjectId Parse(string s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException("s");
+            }
+            if (s.Length != 24)
+            {
+                throw new ArgumentOutOfRangeException("s", "ObjectId string value must be 24 characters.");
+            }
+            return new ObjectId(ParseHexString(s));
+        }
+
+        /// <summary>
+        /// Unpacks a byte array into the components of an ObjectId.
+        /// </summary>
+        /// <param name="bytes">A byte array.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="machine">The machine hash.</param>
+        /// <param name="pid">The PID.</param>
+        /// <param name="increment">The increment.</param>
+        public static void Unpack(byte[] bytes, out int timestamp, out int machine, out short pid, out int increment)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("bytes");
+            }
+            if (bytes.Length != 12)
+            {
+                throw new ArgumentOutOfRangeException("bytes", "Byte array must be 12 bytes long.");
+            }
+            timestamp = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+            machine = (bytes[4] << 16) + (bytes[5] << 8) + bytes[6];
+            pid = (short)((bytes[7] << 8) + bytes[8]);
+            increment = (bytes[9] << 16) + (bytes[10] << 8) + bytes[11];
+        }
+
+        // private static methods
+        /// <summary>
+        /// Gets the current process id.  This method exists because of how CAS operates on the call stack, checking
+        /// for permissions before executing the method.  Hence, if we inlined this call, the calling method would not execute
+        /// before throwing an exception requiring the try/catch at an even higher level that we don't necessarily control.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static int GetCurrentProcessId()
+        {
+            return Process.GetCurrentProcess().Id;
+        }
+
+        private static int GetMachineHash()
+        {
+            var hostName = Environment.MachineName; // use instead of Dns.HostName so it will work offline
+            var md5 = MD5.Create();
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(hostName));
+            return (hash[0] << 16) + (hash[1] << 8) + hash[2]; // use first 3 bytes of hash
+        }
+
+        private static int GetTimestampFromDateTime(DateTime timestamp)
+        {
+            return (int)Math.Floor((ToUniversalTime(timestamp) - __unixEpoch).TotalSeconds);
+        }
+
+        // public methods
+        /// <summary>
+        /// Compares this ObjectId to another ObjectId.
+        /// </summary>
+        /// <param name="other">The other ObjectId.</param>
+        /// <returns>A 32-bit signed integer that indicates whether this ObjectId is less than, equal to, or greather than the other.</returns>
         public int CompareTo(ObjectId other)
         {
-            if (other is null)
-                return 1;
-            for (int i = 0; i < Hex.Length; i++)
-            {
-                if (Hex[i] < other.Hex[i])
-                    return -1;
-                else if (Hex[i] > other.Hex[i])
-                    return 1;
-            }
-            return 0;
+            int r = _timestamp.CompareTo(other._timestamp);
+            if (r != 0) { return r; }
+            r = _machine.CompareTo(other._machine);
+            if (r != 0) { return r; }
+            r = _pid.CompareTo(other._pid);
+            if (r != 0) { return r; }
+            return _increment.CompareTo(other._increment);
         }
 
-        public bool Equals(ObjectId other) => CompareTo(other) == 0;
-        public static bool operator <(ObjectId a, ObjectId b) => a.CompareTo(b) < 0;
-        public static bool operator <=(ObjectId a, ObjectId b) => a.CompareTo(b) <= 0;
-        public static bool operator ==(ObjectId a, ObjectId b) => a.Equals(b);
-        public override bool Equals(object obj) => base.Equals(obj);
-        public static bool operator !=(ObjectId a, ObjectId b) => !(a == b);
-        public static bool operator >=(ObjectId a, ObjectId b) => a.CompareTo(b) >= 0;
-        public static bool operator >(ObjectId a, ObjectId b) => a.CompareTo(b) > 0;
-        public static implicit operator string(ObjectId objectId) => objectId.ToString();
-        public static implicit operator ObjectId(string objectId) => new ObjectId(objectId);
-        public static ObjectId Empty { get { return new ObjectId("000000000000000000000000"); } }
-        public byte[] Hex { get; private set; }
-        public int Timestamp { get; private set; }
-        public int Machine { get; private set; }
-        public int ProcessId { get; private set; }
-        public int Increment { get; private set; }
+        /// <summary>
+        /// Compares this ObjectId to another ObjectId.
+        /// </summary>
+        /// <param name="rhs">The other ObjectId.</param>
+        /// <returns>True if the two ObjectIds are equal.</returns>
+        public bool Equals(ObjectId rhs)
+        {
+            return
+                _timestamp == rhs._timestamp &&
+                _machine == rhs._machine &&
+                _pid == rhs._pid &&
+                _increment == rhs._increment;
+        }
+
+        /// <summary>
+        /// Compares this ObjectId to another object.
+        /// </summary>
+        /// <param name="obj">The other object.</param>
+        /// <returns>True if the other object is an ObjectId and equal to this one.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is ObjectId)
+            {
+                return Equals((ObjectId)obj);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the hash code.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = 37 * hash + _timestamp.GetHashCode();
+            hash = 37 * hash + _machine.GetHashCode();
+            hash = 37 * hash + _pid.GetHashCode();
+            hash = 37 * hash + _increment.GetHashCode();
+            return hash;
+        }
+
+        /// <summary>
+        /// Converts the ObjectId to a byte array.
+        /// </summary>
+        /// <returns>A byte array.</returns>
+        public byte[] ToByteArray()
+        {
+            return Pack(_timestamp, _machine, _pid, _increment);
+        }
+
+        /// <summary>
+        /// Returns a string representation of the value.
+        /// </summary>
+        /// <returns>A string representation of the value.</returns>
+        public override string ToString()
+        {
+            return ToHexString(ToByteArray());
+        }
+
+        /// <summary>
+        /// Parses a hex string into its equivalent byte array.
+        /// </summary>
+        /// <param name="s">The hex string to parse.</param>
+        /// <returns>The byte equivalent of the hex string.</returns>
+        public static byte[] ParseHexString(string s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException("s");
+            }
+
+            if (s.Length % 2 == 1)
+            {
+                throw new Exception("The binary key cannot have an odd number of digits");
+            }
+
+            byte[] arr = new byte[s.Length >> 1];
+
+            for (int i = 0; i < s.Length >> 1; ++i)
+            {
+                arr[i] = (byte)((GetHexVal(s[i << 1]) << 4) + (GetHexVal(s[(i << 1) + 1])));
+            }
+
+            return arr;
+        }
+
+        /// <summary>
+        /// Converts a byte array to a hex string.
+        /// </summary>
+        /// <param name="bytes">The byte array.</param>
+        /// <returns>A hex string.</returns>
+        public static string ToHexString(byte[] bytes)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("bytes");
+            }
+            var result = new char[bytes.Length * 2];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                var val = _lookup32[bytes[i]];
+                result[2 * i] = (char)val;
+                result[2 * i + 1] = (char)(val >> 16);
+            }
+            return new string(result);
+        }
+
+        /// <summary>
+        /// Converts a DateTime to number of milliseconds since Unix epoch.
+        /// </summary>
+        /// <param name="dateTime">A DateTime.</param>
+        /// <returns>Number of seconds since Unix epoch.</returns>
+        public static long ToMillisecondsSinceEpoch(DateTime dateTime)
+        {
+            var utcDateTime = ToUniversalTime(dateTime);
+            return (utcDateTime - __unixEpoch).Ticks / 10000;
+        }
+
+        /// <summary>
+        /// Converts a DateTime to UTC (with special handling for MinValue and MaxValue).
+        /// </summary>
+        /// <param name="dateTime">A DateTime.</param>
+        /// <returns>The DateTime in UTC.</returns>
+        public static DateTime ToUniversalTime(DateTime dateTime)
+        {
+            if (dateTime == DateTime.MinValue)
+            {
+                return DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
+            }
+            else if (dateTime == DateTime.MaxValue)
+            {
+                return DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc);
+            }
+            else
+            {
+                return dateTime.ToUniversalTime();
+            }
+        }
+
+        private static int GetHexVal(char hex)
+        {
+            int val = (int)hex;
+            //For uppercase A-F letters:
+            //return val - (val < 58 ? 48 : 55);
+            //For lowercase a-f letters:
+            //return val - (val < 58 ? 48 : 87);
+            //Or the two combined, but a bit slower:
+            return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
+        }
     }
 }
