@@ -25,8 +25,15 @@ namespace HongMouer.Tests
 
             Console.WriteLine(a);
 
-            Console.WriteLine(Encoding.UTF8.GetString(_Aes));
+            string _aes = StringHelper.byteToHexStr(_Aes);
 
+            Console.WriteLine(StringHelper.byteToHexStr(_Aes));
+
+            byte[] by = StringHelper.HexToByte(_aes);
+
+            Console.WriteLine(Encoding.UTF8.GetString(AesHelper.AESDecrypt(by, Key, IV)));
+
+            Console.WriteLine(AesHelper.AESDecryptHex(_aes, Key, IV));
 
             //for (long i = 0; i < long.MaxValue; i++)
             //{
@@ -37,13 +44,13 @@ namespace HongMouer.Tests
             //    Console.WriteLine("ObjectId.GenerateNewStringId:" + ObjectId.NewId());
             //}
 
-            for (long i = 0; i < 1000; i++)
-            {
-                Console.WriteLine("TimestampId.GetInstance1:" + TimestampId.Instance.GetId());
-                Console.WriteLine("TimestampId.GetInstance2:" + TimestampId.Instance.GetId());
-                Console.WriteLine("TimestampId.GetInstance3:" + TimestampId.Instance.GetId());
-                Console.WriteLine("TimestampId.GetInstance4:" + TimestampId.Instance.GetId());
-            }
+            //for (long i = 0; i < 1000; i++)
+            //{
+            //    Console.WriteLine("TimestampId.GetInstance1:" + TimestampId.Instance.GetId());
+            //    Console.WriteLine("TimestampId.GetInstance2:" + TimestampId.Instance.GetId());
+            //    Console.WriteLine("TimestampId.GetInstance3:" + TimestampId.Instance.GetId());
+            //    Console.WriteLine("TimestampId.GetInstance4:" + TimestampId.Instance.GetId());
+            //}
             Console.WriteLine("Hello World!");
         }
     }
